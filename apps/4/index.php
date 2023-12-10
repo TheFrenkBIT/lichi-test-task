@@ -9,7 +9,6 @@ if ( isset($_GET['group']) )
 }
 echo '<a href="/apps/4">Все товары</a>';
 echo generateHtmlList($groups);
-
 function getGroupList(int $parentId = 0, int $currentGroupId = 0, array $children = []) : array
 {
     global $mysqli;
