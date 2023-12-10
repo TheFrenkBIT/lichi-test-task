@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  php:
+    build: ./docker/php
+    volumes:
+      - ./:/apps
+    ports:
+      - '8000:8000'
+    working_dir: /app
+    user: '1000:1000'
+    command: php -S 0.0.0.0:8000 -t /apps
+  mysql:
+    image: mysql:latest
+    environment:
+        MYSQL_DATABASE: mysql
+        MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3306:3306'

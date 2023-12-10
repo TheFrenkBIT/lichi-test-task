@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+<style>
+    body{
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f4f4f4;
+    }
+    #contact-block{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 15%;
+    }
+    #button-block{
+        display: flex;
+        justify-content: center;
+        padding-top: 10%;
+    }
+</style>
+<body>
+    <form id="contact-block">
+        <span id="send-result" class="text-danger"></span>
+        <div>
+            <span>Имя</span>
+            <input type="text" class="form-control" name="first-name" required>
+        </div>
+        <div>
+            <span>Фамилия</span>
+            <input type="text" class="form-control" name="last-name" required>
+        </div>
+        <div>
+            <span>Email</span>
+            <input type="email" class="form-control" name="email" required>
+        </div>
+        <div>
+            <span>Пароль</span>
+            <input type="password" class="form-control" name="password" required>
+        </div>
+        <div>
+            <span>Повтор пароля</span>
+            <input type="password" class="form-control" name="repeat-password" required>
+        </div>
+        <div id="button-block">
+            <button id="save-info" type="submit" class="btn btn-primary">Отправить</button>
+        </div>
+    </form>
+</body>
+<script>
+    $('#contact-block').on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type : 'POST',
+            url : '/apps/5/ajax.php',
+            data : $(this).serialize(),
+            success : function (jsonRes) {
+                let res = JSON.parse(jsonRes);
+                console.log(res.result);
+                switch (res.result) {
+                    case 'failed-validate':
+                        $('#send-result').text('Ошибка валидации');
+                        break;
+                    case 'duplicate-user':
+                        $('#send-result').text('Пользователь с таким email уже существует');
+                        break;
+                    case 'success':
+                        $('#contact-block').remove();
+                        $('body').append('<span class="text-success">Вы успешно зарегистрировались</span>');
+                        break;
+                }
+            }
+        });
+    });
+</script>
+</html>
